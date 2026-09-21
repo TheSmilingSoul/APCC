@@ -1,1 +1,65 @@
+name: Build and deploy Pluto notebook
 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.11'
+
+      - name: Install PlutoSliderServer
+        run: |
+          julia -e 'using Pkg; Pkg.add("PlutoSliderServer")'
+
+      - name: Build Pluto website
+        run: |
+          mkdir -p public
+          julia -e '
+            using PlutoSliderServer
+            PlutoSliderServer.export_directory(
+                "AstroCaliTech/Motivations",
+                "public"
+            )
+          '
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
