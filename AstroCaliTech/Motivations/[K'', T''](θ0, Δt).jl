@@ -26,7 +26,7 @@ end
 md"## Modify Δt, θ0 (and b) with the Sliders"
 
 # ╔═╡ e95bd79c-7549-4a7f-a90b-da6130c084da
-@bind dt PlutoUI.Slider(0.001:0.001:300, default=1, show_value=true)
+@bind dt PlutoUI.Slider(0.001:0.001:300, default=60, show_value=true)
 
 # ╔═╡ 2c8d17a5-cce0-4fd7-a04d-64ac331c09f8
 @bind θ0 PlutoUI.Slider(0:1:90, default=68, show_value=true)
