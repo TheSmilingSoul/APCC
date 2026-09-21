@@ -1,2 +1,2 @@
 # Astrometry-and-Photometry-Calibration-Comparison
-Booklet
+Booklet on Calibrations for Auroral Tomography Purposes
