@@ -270,7 +270,7 @@ begin
         title="Positional error [T''K''] (km)",
         yreversed=true,
         xticks=(
-            [1, 46, 91, 136, 180],
+            range(1, length(az_d_plot), length=5),
             ["180", "270", "0 / 360", "90", "180"]
         )
     )
