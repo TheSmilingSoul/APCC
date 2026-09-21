@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -24,18 +24,18 @@ jobs:
         with:
           version: '1.11'
 
-      - name: Install PlutoSliderServer
+      - name: Build Pluto notebooks
         run: |
-          julia -e 'using Pkg; Pkg.add("PlutoSliderServer")'
-
-      - name: Build Pluto website
-        run: |
-          mkdir -p public
           julia -e '
+            using Pkg
+            Pkg.add("PlutoSliderServer")
             using PlutoSliderServer
-            PlutoSliderServer.export_directory(
-                "AstroCaliTech/Motivations",
-                "public"
+
+            PlutoSliderServer.github_action(
+                "AstroCaliTech/Motivations";
+                Export_cache_dir="pluto_state_cache",
+                Export_baked_notebookfile=false,
+                Export_baked_state=false
             )
           '
 
@@ -45,7 +45,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: public
+          path: AstroCaliTech/Motivations
 
   deploy:
     needs: build
